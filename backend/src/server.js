@@ -19,7 +19,7 @@ app.use("/api/auth",authRoutes);
 app.use("/api/messages",messageRoutes);
 
 //make ready for deployment
-if(ENV.NODE_ENV==="production"){
+if(ENV.NODE_ENV==="development"){
     app.use(express.static(path.join(__dirname,"../frontend/dist")));
     app.get("*",(_,res)=>{
         res.sendFile(path.join(__dirname,"../frontend","dist","index.html"));
