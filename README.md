@@ -1,3 +1,6 @@
+# 💬 Chatify – Real-Time Chat Application (MERN Stack)
+
+A modern real-time chatting application built on the **MERN stack** with secure authentication, real-time messaging, and a beautiful UI.  
 
 Highlights:
 
