@@ -9,31 +9,34 @@ const server = http.createServer(app);
 
 const io = new Server(server, {
   cors: {
-    origin: ENV.CLIENT_URL,
+    origin: [ENV.CLIENT_URL],
     credentials: true,
   },
 });
 
-// socket authentication middleware
+// apply authentication middleware to all socket connections
 io.use(socketAuthMiddleware);
 
-// store online users
-const userSocketMap = {}; // { userId: socketId }
-
+// we will use this function to check if the user is online or not
 export function getReceiverSocketId(userId) {
-  return userSocketMap?.[userId] || null;
+  return userSocketMap[userId];
 }
 
+// this is for storig online users
+const userSocketMap = {}; // {userId:socketId}
+
 io.on("connection", (socket) => {
-  console.log("User connected:", socket.user?.fullName);
+  console.log("A user connected", socket.user.fullName);
 
   const userId = socket.userId;
   userSocketMap[userId] = socket.id;
 
+  // io.emit() is used to send events to all connected clients
   io.emit("getOnlineUsers", Object.keys(userSocketMap));
 
+  // with socket.on we listen for events from clients
   socket.on("disconnect", () => {
-    console.log("User disconnected:", socket.user?.fullName);
+    console.log("A user disconnected", socket.user.fullName);
     delete userSocketMap[userId];
     io.emit("getOnlineUsers", Object.keys(userSocketMap));
   });
